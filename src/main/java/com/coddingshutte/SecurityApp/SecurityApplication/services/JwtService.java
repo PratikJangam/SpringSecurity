@@ -34,7 +34,7 @@ public class JwtService {
 
     }
 
-    public Long getUserIdFromToke(String token){
+    public Long getUserIdFromToken(String token){
         Claims claims = Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
