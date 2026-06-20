@@ -2,7 +2,9 @@ package com.coddingshutte.SecurityApp.SecurityApplication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,7 +24,7 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/posts").permitAll()
+                        .requestMatchers("/posts", "/auth/**").permitAll()
                         .requestMatchers("/posts/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrfConfig -> csrfConfig.disable())
@@ -32,27 +34,31 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean
-    UserDetailsService myInMemoryUserDetailsService(){
-        UserDetails normaluser = User
-                .withUsername("pratik")
-                .password(passwordEncoder().encode("pratik"))
-                .roles("USER")
-                .build();
-
-        UserDetails adminUser = User
-                .withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(normaluser, adminUser);
-    }
+//    @Bean
+//    UserDetailsService myInMemoryUserDetailsService(){
+//        UserDetails normaluser = User
+//                .withUsername("pratik")
+//                .password(passwordEncoder().encode("pratik"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails adminUser = User
+//                .withUsername("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(normaluser, adminUser);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
+    }
 
 }
