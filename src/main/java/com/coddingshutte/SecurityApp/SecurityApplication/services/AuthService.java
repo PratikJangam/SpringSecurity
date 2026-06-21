@@ -1,6 +1,7 @@
 package com.coddingshutte.SecurityApp.SecurityApplication.services;
 
 import com.coddingshutte.SecurityApp.SecurityApplication.dto.LoginDto;
+import com.coddingshutte.SecurityApp.SecurityApplication.dto.LoginResponseDto;
 import com.coddingshutte.SecurityApp.SecurityApplication.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,12 +15,24 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserService userService;
 
-    public String login(LoginDto loginDto) {
+    public LoginResponseDto login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
         );
         User user = (User) authentication.getPrincipal();
-        return jwtService.generateToken(user);
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return new LoginResponseDto(user.getId(), accessToken, refreshToken);
+    }
+
+    public LoginResponseDto refreshToken(String refreshToken) {
+        Long userId = jwtService.getUserIdFromToken(refreshToken);
+        User user = userService.getUserById(userId);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        return new LoginResponseDto(user.getId(), accessToken, refreshToken);
     }
 }
