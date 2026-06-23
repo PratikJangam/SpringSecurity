@@ -6,6 +6,7 @@ import com.coddingshutte.SecurityApp.SecurityApplication.dto.UserDto;
 import com.coddingshutte.SecurityApp.SecurityApplication.entity.User;
 import com.coddingshutte.SecurityApp.SecurityApplication.exception.ResourceNotFoundException;
 import com.coddingshutte.SecurityApp.SecurityApplication.repositories.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,4 +53,11 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public User save(User newUser) {
+        return userRepository.save(newUser);
+    }
 }
