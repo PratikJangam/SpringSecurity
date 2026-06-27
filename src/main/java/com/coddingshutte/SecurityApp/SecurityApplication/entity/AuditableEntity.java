@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Audited
+//@Audited
 public class AuditableEntity {
 
     @CreatedDate

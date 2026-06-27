@@ -1,5 +1,6 @@
 package com.coddingshutte.SecurityApp.SecurityApplication.dto;
 
+import com.coddingshutte.SecurityApp.SecurityApplication.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,6 @@ public class PostDTO {
     private String title;
 
     private String description;
+
+    private UserDto author;
 }
