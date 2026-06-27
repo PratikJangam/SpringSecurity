@@ -30,6 +30,7 @@ public class SessionService {
         Session newSession = Session.builder()
                 .user(user)
                 .refreshToken(refreshToken)
+                .lastUsedDate(LocalDateTime.now())
                 .build();
         sessionRepository.save(newSession);
     }
